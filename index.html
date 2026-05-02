@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GENIOVA AI — Cuestionario Técnico Ingenieros</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #050505;
+    --bg-2: #0a0a0a;
+    --surface: rgba(255,255,255,0.03);
+    --border: rgba(255,255,255,0.08);
+    --text: #ffffff;
+    --text-dim: rgba(255,255,255,0.6);
+    --text-mute: rgba(255,255,255,0.4);
+    --accent-1: #ff3d6e;
+    --accent-2: #ffae3d;
+    --accent-3: #3dffa5;
+    --accent-4: #3daaff;
+    --accent-5: #c43dff;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', -apple-system, sans-serif;
+    overflow-x: hidden;
+    line-height: 1.5;
+  }
+
+  /* Holographic noise bg */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 20% 10%, rgba(255,61,110,0.08), transparent 40%),
+      radial-gradient(circle at 85% 90%, rgba(61,170,255,0.08), transparent 40%),
+      radial-gradient(circle at 50% 50%, rgba(196,61,255,0.04), transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .display {
+    font-family: 'Anton', 'Inter', sans-serif;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    line-height: 0.9;
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 80px 40px;
+    overflow: hidden;
+  }
+
+  .hero-inner {
+    max-width: 1400px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 60px;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 32px;
+    padding: 8px 14px;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    width: fit-content;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent-3);
+    box-shadow: 0 0 12px var(--accent-3);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .hero h1 {
+    font-size: clamp(60px, 9vw, 140px);
+    margin-bottom: 24px;
+  }
+
+  .hero h1 .gradient {
+    background: linear-gradient(90deg, #ff3d6e, #ffae3d, #3dffa5, #3daaff, #c43dff);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shift 6s linear infinite;
+  }
+
+  @keyframes shift {
+    to { background-position: 200% center; }
+  }
+
+  .hero-sub {
+    font-size: 18px;
+    color: var(--text-dim);
+    max-width: 500px;
+    margin-bottom: 40px;
+    line-height: 1.6;
+  }
+
+  .hero-meta {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+    padding-top: 32px;
+    border-top: 1px solid var(--border);
+  }
+
+  .meta-item .meta-label {
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-mute);
+    margin-bottom: 6px;
+  }
+
+  .meta-item .meta-value {
+    font-size: 14px;
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  /* Holographic cube */
+  .cube-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: 1200px;
+    min-height: 500px;
+  }
+
+  .cube {
+    width: 320px;
+    height: 320px;
+    position: relative;
+    transform-style: preserve-3d;
+    animation: spin 18s linear infinite;
+  }
+
+  @keyframes spin {
+    from { transform: rotateX(-20deg) rotateY(0); }
+    to { transform: rotateX(-20deg) rotateY(360deg); }
+  }
+
+  .face {
+    position: absolute;
+    width: 320px;
+    height: 320px;
+    background:
+      linear-gradient(135deg,
+        rgba(255,61,110,0.9),
+        rgba(255,174,61,0.9),
+        rgba(61,255,165,0.9),
+        rgba(61,170,255,0.9),
+        rgba(196,61,255,0.9));
+    background-size: 300% 300%;
+    animation: shimmer 6s ease infinite;
+    border: 2px solid rgba(255,255,255,0.25);
+    box-shadow:
+      0 0 80px rgba(255,61,110,0.4),
+      inset 0 0 60px rgba(255,255,255,0.15);
+    backdrop-filter: blur(4px);
+  }
+
+  @keyframes shimmer {
+    0%, 100% { background-position: 0% 0%; }
+    50% { background-position: 100% 100%; }
+  }
+
+  .face.front  { transform: translateZ(160px); }
+  .face.back   { transform: rotateY(180deg) translateZ(160px); }
+  .face.right  { transform: rotateY(90deg) translateZ(160px); }
+  .face.left   { transform: rotateY(-90deg) translateZ(160px); }
+  .face.top    { transform: rotateX(90deg) translateZ(160px); }
+  .face.bottom { transform: rotateX(-90deg) translateZ(160px); }
+
+  .cube-glow {
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(255,61,110,0.2), transparent 70%);
+    filter: blur(60px);
+    z-index: -1;
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--text-mute);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .scroll-line {
+    width: 1px;
+    height: 40px;
+    background: linear-gradient(to bottom, transparent, var(--text-dim));
+    animation: slide 2s ease infinite;
+  }
+
+  @keyframes slide {
+    0% { transform: scaleY(0); transform-origin: top; }
+    50% { transform: scaleY(1); transform-origin: top; }
+    50.1% { transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
+  }
+
+  /* INDEX */
+  .index-section {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 100px 40px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .index-title {
+    font-size: clamp(40px, 6vw, 80px);
+    margin-bottom: 60px;
+  }
+
+  .index-list {
+    border-top: 1px solid var(--border);
+  }
+
+  .index-item {
+    display: grid;
+    grid-template-columns: 80px 1fr auto;
+    gap: 24px;
+    align-items: center;
+    padding: 24px 0;
+    border-bottom: 1px solid var(--border);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--text);
+  }
+
+  .index-item:hover {
+    padding-left: 12px;
+    background: linear-gradient(90deg, rgba(255,255,255,0.03), transparent);
+  }
+
+  .index-num {
+    font-family: 'Anton', sans-serif;
+    font-size: 20px;
+    color: var(--text-mute);
+  }
+
+  .index-name {
+    font-size: clamp(18px, 2vw, 24px);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+
+  .index-count {
+    font-size: 12px;
+    color: var(--text-mute);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  /* FORM */
+  .form-wrapper {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 60px 40px 120px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .section {
+    margin-bottom: 100px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
+    margin-bottom: 48px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+
+  .section-header::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent-1), var(--accent-4));
+  }
+
+  .section-num {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(32px, 5vw, 56px);
+    background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1;
+  }
+
+  .section-title {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(28px, 4vw, 48px);
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    line-height: 1;
+  }
+
+  .field {
+    margin-bottom: 36px;
+  }
+
+  .field-label {
+    display: block;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 6px;
+    line-height: 1.5;
+  }
+
+  .field-number {
+    color: var(--accent-2);
+    font-weight: 600;
+    margin-right: 8px;
+    font-family: 'Anton', sans-serif;
+    font-size: 16px;
+    letter-spacing: 0.05em;
+  }
+
+  .field-hint {
+    font-size: 13px;
+    color: var(--text-mute);
+    font-style: italic;
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+
+  .field-hint::before {
+    content: '→ ';
+    color: var(--accent-3);
+    font-style: normal;
+    margin-right: 4px;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  textarea,
+  select {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 14px 18px;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    border-radius: 10px;
+    transition: all 0.25s ease;
+    resize: vertical;
+  }
+
+  textarea {
+    min-height: 100px;
+    line-height: 1.6;
+  }
+
+  input:focus,
+  textarea:focus,
+  select:focus {
+    outline: none;
+    border-color: var(--accent-1);
+    background: rgba(255,255,255,0.05);
+    box-shadow: 0 0 0 3px rgba(255,61,110,0.15);
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--text-mute);
+  }
+
+  /* Intro form grid */
+  .intro-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .intro-grid .field.full {
+    grid-column: 1 / -1;
+  }
+
+  /* Submit */
+  .submit-area {
+    margin-top: 80px;
+    padding: 48px;
+    background: linear-gradient(135deg,
+      rgba(255,61,110,0.08),
+      rgba(61,170,255,0.08));
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .submit-area::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(from 0deg,
+      transparent,
+      rgba(255,61,110,0.1),
+      transparent,
+      rgba(61,255,165,0.1),
+      transparent);
+    animation: rotate 10s linear infinite;
+  }
+
+  @keyframes rotate {
+    to { transform: rotate(360deg); }
+  }
+
+  .submit-area > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .submit-title {
+    font-family: 'Anton', sans-serif;
+    font-size: clamp(28px, 4vw, 42px);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .submit-sub {
+    color: var(--text-dim);
+    margin-bottom: 32px;
+    font-size: 15px;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 40px;
+    background: #fff;
+    color: #000;
+    font-family: 'Anton', sans-serif;
+    font-size: 18px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border: none;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    text-decoration: none;
+  }
+
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(255,255,255,0.2);
+  }
+
+  .btn .arrow {
+    transition: transform 0.25s ease;
+  }
+
+  .btn:hover .arrow {
+    transform: translateX(4px);
+  }
+
+  /* Footer */
+  footer {
+    padding: 60px 40px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    color: var(--text-mute);
+    font-size: 13px;
+    position: relative;
+    z-index: 2;
+  }
+
+  footer strong {
+    color: var(--text-dim);
+    font-weight: 500;
+  }
+
+  .footer-brand {
+    font-family: 'Anton', sans-serif;
+    font-size: 24px;
+    color: var(--text);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    .hero-inner {
+      grid-template-columns: 1fr;
+      gap: 40px;
+      text-align: center;
+    }
+    .hero-eyebrow, .hero-meta { justify-content: center; }
+    .hero-meta { flex-direction: column; gap: 16px; align-items: center; }
+    .cube-wrapper { min-height: 340px; }
+    .cube, .face { width: 220px; height: 220px; }
+    .face.front { transform: translateZ(110px); }
+    .face.back { transform: rotateY(180deg) translateZ(110px); }
+    .face.right { transform: rotateY(90deg) translateZ(110px); }
+    .face.left { transform: rotateY(-90deg) translateZ(110px); }
+    .face.top { transform: rotateX(90deg) translateZ(110px); }
+    .face.bottom { transform: rotateX(-90deg) translateZ(110px); }
+    .intro-grid { grid-template-columns: 1fr; }
+    .index-item { grid-template-columns: 50px 1fr; }
+    .index-count { display: none; }
+  }
+
+  /* Selection */
+  ::selection { background: var(--accent-1); color: #fff; }
+
+  /* Success message */
+  .success-banner {
+    display: none;
+    margin-top: 24px;
+    padding: 16px 24px;
+    background: rgba(61,255,165,0.1);
+    border: 1px solid var(--accent-3);
+    border-radius: 10px;
+    color: var(--accent-3);
+    font-weight: 500;
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-eyebrow">
+        <span class="dot"></span>
+        <span>Versión 1.0 · Abril 2026 · Confidencial</span>
+      </div>
+      <h1 class="display">GENIOVA<br><span class="gradient">AI</span></h1>
+      <p class="hero-sub">
+        Cuestionario técnico para integración del sistema RAG. Cuanta más información nos deis, mejor adaptaremos GENIOVA AI a vuestra infraestructura sin tener que rehacer trabajo.
+      </p>
+      <div class="hero-meta">
+        <div class="meta-item">
+          <div class="meta-label">Dirigido a</div>
+          <div class="meta-value">Equipo Ingeniería</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Duración</div>
+          <div class="meta-value">~15 min</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Secciones</div>
+          <div class="meta-value">5 bloques</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cube-wrapper">
+      <div class="cube-glow"></div>
+      <div class="cube">
+        <div class="face front"></div>
+        <div class="face back"></div>
+        <div class="face right"></div>
+        <div class="face left"></div>
+        <div class="face top"></div>
+        <div class="face bottom"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- INDEX -->
+<section class="index-section">
+  <h2 class="display index-title">Contenido</h2>
+  <div class="index-list">
+    <a href="#intro" class="index-item">
+      <span class="index-num">00</span>
+      <span class="index-name">Datos del participante</span>
+      <span class="index-count">4 campos</span>
+    </a>
+    <a href="#s1" class="index-item">
+      <span class="index-num">01</span>
+      <span class="index-name">Estructura de casos</span>
+      <span class="index-count">4 preguntas</span>
+    </a>
+    <a href="#s2" class="index-item">
+      <span class="index-num">02</span>
+      <span class="index-name">Imágenes y archivos</span>
+      <span class="index-count">4 preguntas</span>
+    </a>
+    <a href="#s3" class="index-item">
+      <span class="index-num">03</span>
+      <span class="index-name">Base de datos e infraestructura</span>
+      <span class="index-count">4 preguntas</span>
+    </a>
+    <a href="#s4" class="index-item">
+      <span class="index-num">04</span>
+      <span class="index-name">Retratamientos</span>
+      <span class="index-count">3 preguntas</span>
+    </a>
+    <a href="#s5" class="index-item">
+      <span class="index-num">05</span>
+      <span class="index-name">Volumen de datos</span>
+      <span class="index-count">3 preguntas</span>
+    </a>
+  </div>
+</section>
+
+<!-- FORM -->
+<form class="form-wrapper" id="geniova-form" onsubmit="return handleSubmit(event)">
+
+  <!-- INTRO -->
+  <div class="section" id="intro">
+    <div class="section-header">
+      <span class="section-num">00</span>
+      <h2 class="section-title">Datos del participante</h2>
+    </div>
+    <div class="intro-grid">
+      <div class="field">
+        <label class="field-label" for="nombre">Nombre</label>
+        <input type="text" id="nombre" name="nombre" required placeholder="Ej. Sergio">
+      </div>
+      <div class="field">
+        <label class="field-label" for="apellido">Apellido</label>
+        <input type="text" id="apellido" name="apellido" required placeholder="Ej. Pozo">
+      </div>
+      <div class="field">
+        <label class="field-label" for="departamento">Departamento</label>
+        <input type="text" id="departamento" name="departamento" required placeholder="Ej. Ingeniería / Backend / Data">
+      </div>
+      <div class="field">
+        <label class="field-label" for="email">Email</label>
+        <input type="email" id="email" name="email" required placeholder="nombre@empresa.com">
+      </div>
+    </div>
+  </div>
+
+  <!-- SECCION 1 -->
+  <div class="section" id="s1">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2 class="section-title">Estructura de casos</h2>
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="q11">
+        <span class="field-number">1.1</span>¿Qué campos tiene un caso en vuestra base de datos?
+      </label>
+      <div class="field-hint">Nombre del campo, tipo de dato y descripción breve</div>
+      <textarea id="q11" name="q11" placeholder="Ej. case_id (uuid), patient_id (uuid), created_at (timestamp)..."></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="q12">
+        <span class="field-number">1.2</span>¿Cómo identificáis que un caso es un retratamiento o refinamiento de otro anterior?
+      </label>
+      <div class="field-hint">¿Existe algún campo tipo current_sequence, revision_number o similar?</div>
+      <textarea id="q12" name="q12"></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="q13">
+        <span class="field-number">1.3</span>¿El mismo paciente siempre mantiene el mismo ID en todos sus casos o cambia?
+      </label>
+      <textarea id="q13" name="q13"></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="q14">
+        <span class="field-number">1.4</span>¿Los JSONs de planificación (movimientos, Bolton, IPR, attachments) los genera vuestro sistema automáticamente o los introduce el planificador manualmente?
+      </label>
+      <textarea id="q14" name="q14"></textarea>
+    </div>
+  </div>
+
+  <!-- SECCION 2 -->
+  <div class="section" id="s2">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2 class="section-title">Imágenes y archivos</h2>
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="q21">
+        <span class="field-number">2.1</span>¿Las fotos clínicas (intraorales, extraorales, OPG) están almacenadas en vuestra base de datos o en un sistema externo?
+      </label>
+      <textarea id="q21" name="q21"></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="q22">
+        <span class="field-number">2.2</span>¿En qué formato y resolución guardáis las imágenes?
+      </label>
+      <textarea id="q22" name="q22" placeholder="Ej. JPG 2048x1536, PNG, DICOM..."></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="q23">
+        <span class="field-number">2.3</span>¿Los archivos STL de los escáneres están vinculados al caso en la BD o se guardan por separado?
+      </label>
+      <textarea id="q23" name="q23"></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="q24">
+        <span class="field-number">2.4</span>¿Tenéis archivos CBCT asociados a los casos?
+      </label>
+      <div class="field-hint">¿En qué formato? (DICOM, CBCT raw...)</div>
+      <textarea id="q24" name="q24"></textarea>
+    </div>
+  </div>
+
+  <!-- SECCION 3 -->
+  <div class="section" id="s3">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2 class="section-title">Base de datos e infraestructura</h2>
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="q31">
+        <span class="field-number">3.1</span>¿Qué base de datos usáis?
+      </label>
+      <div class="field-hint">PostgreSQL, MySQL, MongoDB u otra</div>
+      <textarea id="q31" name="q31"></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="q32">
+        <span class="field-number">3.2</span>¿Tenéis una API propia para exportar casos?
+      </label>
+      <div class="field-hint">Si es así, ¿qué endpoints están disponibles?</div>
+      <textarea id="q32" name="q32"></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="q33">
+        <span class="field-number">3.3</span>¿Disponéis de un servidor donde podamos desplegar el pipeline de GENIOVA AI?
+      </label>
+      <div class="field-hint">¿Qué sistema operativo y cuánta RAM tiene?</div>
+      <textarea id="q33" name="q33"></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="q34">
+        <span class="field-number">3.4</span>¿Tenéis experiencia con Docker?
+      </label>
+      <div class="field-hint">¿Podríais levantar un contenedor en vuestro servidor?</div>
+      <textarea id="q34" name="q34"></textarea>
+    </div>
+  </div>
+
+  <!-- SECCION 4 -->
+  <div class="section" id="s4">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2 class="section-title">Retratamientos</h2>
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="q41">
+        <span class="field-number">4.1</span>¿Documentáis actualmente el motivo de los retratamientos en algún campo?
+      </label>
+      <textarea id="q41" name="q41"></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="q42">
+        <span class="field-number">4.2</span>¿Tenéis datos históricos de casos que acabaron en retratamiento?
+      </label>
+      <div class="field-hint">¿Cuántos aproximadamente?</div>
+      <textarea id="q42" name="q42"></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="q43">
+        <span class="field-number">4.3</span>¿El planificador deja notas clínicas en texto libre sobre los casos?
+      </label>
+      <div class="field-hint">¿Dónde se guardan?</div>
+      <textarea id="q43" name="q43"></textarea>
+    </div>
+  </div>
+
+  <!-- SECCION 5 -->
+  <div class="section" id="s5">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <h2 class="section-title">Volumen de datos</h2>
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="q51">
+        <span class="field-number">5.1</span>¿Cuántos casos activos tenéis actualmente en la BD?
+      </label>
+      <input type="text" id="q51" name="q51" placeholder="Ej. 12.450">
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="q52">
+        <span class="field-number">5.2</span>¿Cuántos casos nuevos entran aproximadamente por semana?
+      </label>
+      <input type="text" id="q52" name="q52" placeholder="Ej. 80 casos/semana">
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="q53">
+        <span class="field-number">5.3</span>¿Tenéis histórico de casos anteriores que podríamos indexar en el RAG?
+      </label>
+      <div class="field-hint">Este es el dato más importante — cuantos más casos, mejor aprende el agente</div>
+      <textarea id="q53" name="q53"></textarea>
+    </div>
+  </div>
+
+  <!-- SUBMIT -->
+  <div class="submit-area">
+    <h3 class="submit-title">¿Todo listo?</h3>
+    <p class="submit-sub">Envía el cuestionario y nuestro equipo revisará las respuestas para preparar la integración.</p>
+    <button type="submit" class="btn">
+      Enviar mi cuestionario
+      <span class="arrow">→</span>
+    </button>
+    <div class="success-banner" id="success">
+      ✓ Respuestas registradas. Recibirás confirmación por email en breve.
+    </div>
+  </div>
+</form>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">vertical ai</div>
+  <p>GENIOVA AI · Documento técnico confidencial · Abril 2026</p>
+</footer>
+
+<script>
+  // Destino del cuestionario
+  const DESTINATION_EMAIL = 'spozo@vertical-ai.es';
+  const FORMSUBMIT_ENDPOINT = 'https://formsubmit.co/ajax/' + DESTINATION_EMAIL;
+
+  const SECTION_LABELS = {
+    nombre: '👤 Nombre', apellido: '👤 Apellido',
+    departamento: '👤 Departamento', email: '👤 Email del participante',
+    q11: '1.1 Campos de un caso en la BD',
+    q12: '1.2 Identificación retratamiento/refinamiento',
+    q13: '1.3 ID paciente (mismo o cambia)',
+    q14: '1.4 JSONs de planificación (auto o manual)',
+    q21: '2.1 Fotos clínicas (BD o externa)',
+    q22: '2.2 Formato y resolución imágenes',
+    q23: '2.3 Archivos STL escáneres',
+    q24: '2.4 Archivos CBCT',
+    q31: '3.1 Base de datos utilizada',
+    q32: '3.2 API propia para exportar casos',
+    q33: '3.3 Servidor para desplegar pipeline',
+    q34: '3.4 Experiencia con Docker',
+    q41: '4.1 Documentación motivo retratamientos',
+    q42: '4.2 Datos históricos retratamientos',
+    q43: '4.3 Notas clínicas del planificador',
+    q51: '5.1 Casos activos actuales en BD',
+    q52: '5.2 Casos nuevos por semana',
+    q53: '5.3 Histórico indexable en RAG'
+  };
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    const form = document.getElementById('geniova-form');
+    const btn = form.querySelector('button[type="submit"]');
+    const successEl = document.getElementById('success');
+    const raw = Object.fromEntries(new FormData(form).entries());
+
+    // Payload formateado y legible para el email
+    const payload = {
+      _subject: `📋 GENIOVA · Cuestionario de ${raw.nombre || '?'} ${raw.apellido || ''} (${raw.departamento || '—'})`,
+      _template: 'table',
+      _captcha: 'false',
+      'Fecha envío': new Date().toLocaleString('es-ES', { timeZone: 'Europe/Madrid' })
+    };
+    Object.entries(raw).forEach(([k, v]) => {
+      payload[SECTION_LABELS[k] || k] = v || '(sin respuesta)';
+    });
+
+    btn.disabled = true;
+    btn.innerHTML = 'Enviando... <span class="arrow">⏳</span>';
+    successEl.style.display = 'none';
+
+    try {
+      const res = await fetch(FORMSUBMIT_ENDPOINT, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+      if (data.success === 'false' || data.success === false) {
+        throw new Error(data.message || 'Error del servidor');
+      }
+
+      successEl.style.display = 'block';
+      successEl.style.background = 'rgba(61,255,165,0.1)';
+      successEl.style.borderColor = '#3dffa5';
+      successEl.style.color = '#3dffa5';
+      successEl.textContent = '✓ ¡Cuestionario enviado correctamente! Gracias por tu tiempo.';
+      successEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      btn.innerHTML = 'Enviado ✓';
+    } catch (err) {
+      successEl.style.display = 'block';
+      successEl.style.background = 'rgba(255,61,110,0.1)';
+      successEl.style.borderColor = '#ff3d6e';
+      successEl.style.color = '#ff3d6e';
+      successEl.textContent = '✗ Error al enviar. Inténtalo de nuevo o escribe a ' + DESTINATION_EMAIL;
+      btn.disabled = false;
+      btn.innerHTML = 'Reintentar <span class="arrow">→</span>';
+      console.error(err);
+    }
+    return false;
+  }
+
+  // Parallax cube on scroll
+  const cube = document.querySelector('.cube');
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    if (y < 800 && cube) {
+      cube.style.transform = `rotateX(${-20 + y * 0.05}deg) rotateY(${y * 0.1}deg)`;
+    }
+  });
+</script>
+
+</body>
+</html>
